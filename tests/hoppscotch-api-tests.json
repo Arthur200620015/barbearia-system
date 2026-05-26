@@ -1,0 +1,187 @@
+{
+  "v": 12,
+  "name": "Barbearia System API Tests",
+  "folders": [],
+  "requests": [
+    {
+      "v": "17",
+      "endpoint": "http://localhost:8000/",
+      "name": "Home da API",
+      "params": [],
+      "headers": [],
+      "method": "GET",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "preRequestScript": "",
+      "testScript": "pw.test(\"Status Code é 200\", () => {\n  pw.expect(pw.response.status).toBe(200);\n});\n\npw.test(\"Mensagem da API existe\", () => {\n  pw.expect(pw.response.body.msg).toBe(\"API Barbearia Online\");\n});",
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {},
+      "description": "Teste da rota inicial da API."
+    },
+    {
+      "v": "17",
+      "endpoint": "http://localhost:8000/login",
+      "name": "Login Correto",
+      "params": [],
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json",
+          "active": true
+        }
+      ],
+      "method": "POST",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "preRequestScript": "",
+      "testScript": "pw.test(\"Status Code é 200\", () => {\n  pw.expect(pw.response.status).toBe(200);\n});\n\npw.test(\"Login retorna status ok\", () => {\n  pw.expect(pw.response.body.status).toBe(\"ok\");\n});",
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n  \"usuario\": \"admin\",\n  \"senha\": \"1234\"\n}"
+      },
+      "requestVariables": [],
+      "responses": {},
+      "description": "Teste de login com usuário e senha corretos."
+    },
+    {
+      "v": "17",
+      "endpoint": "http://localhost:8000/login",
+      "name": "Login Incorreto",
+      "params": [],
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json",
+          "active": true
+        }
+      ],
+      "method": "POST",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "preRequestScript": "",
+      "testScript": "pw.test(\"Status Code é 401\", () => {\n  pw.expect(pw.response.status).toBe(401);\n});\n\npw.test(\"Retorna mensagem de erro\", () => {\n  pw.expect(pw.response.body.detail).toBe(\"Usuário ou senha inválidos\");\n});",
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n  \"usuario\": \"admin\",\n  \"senha\": \"senha_errada\"\n}"
+      },
+      "requestVariables": [],
+      "responses": {},
+      "description": "Teste de login com senha incorreta."
+    },
+    {
+      "v": "17",
+      "endpoint": "http://localhost:8000/clientes",
+      "name": "Cadastrar Agendamento",
+      "params": [],
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json",
+          "active": true
+        }
+      ],
+      "method": "POST",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "preRequestScript": "",
+      "testScript": "pw.test(\"Status Code é 200\", () => {\n  pw.expect(pw.response.status).toBe(200);\n});\n\npw.test(\"Cliente cadastrado corretamente\", () => {\n  pw.expect(pw.response.body.nome).toBe(\"Arthur\");\n  pw.expect(pw.response.body.servico).toBe(\"Corte + Barba\");\n  pw.expect(pw.response.body.status).toBe(\"Agendado\");\n});",
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n  \"nome\": \"Arthur\",\n  \"servico\": \"Corte + Barba\",\n  \"data\": \"2026-05-02\",\n  \"horario\": \"18:00\",\n  \"status\": \"Agendado\"\n}"
+      },
+      "requestVariables": [],
+      "responses": {},
+      "description": "Teste de cadastro de agendamento."
+    },
+    {
+      "v": "17",
+      "endpoint": "http://localhost:8000/clientes",
+      "name": "Listar Agendamentos",
+      "params": [],
+      "headers": [],
+      "method": "GET",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "preRequestScript": "",
+      "testScript": "pw.test(\"Status Code é 200\", () => {\n  pw.expect(pw.response.status).toBe(200);\n});\n\npw.test(\"Retorno é uma lista\", () => {\n  pw.expect(pw.response.body).toBeType(\"array\");\n});",
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {},
+      "description": "Teste de listagem de agendamentos."
+    },
+    {
+      "v": "17",
+      "endpoint": "http://localhost:8000/clientes/1",
+      "name": "Editar Agendamento",
+      "params": [],
+      "headers": [
+        {
+          "key": "Content-Type",
+          "value": "application/json",
+          "active": true
+        }
+      ],
+      "method": "PUT",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "preRequestScript": "",
+      "testScript": "pw.test(\"Status Code é 200 ou 404\", () => {\n  pw.expect([200, 404]).toContain(pw.response.status);\n});\n\nif (pw.response.status === 200) {\n  pw.test(\"Agendamento atualizado\", () => {\n    pw.expect(pw.response.body.status).toBe(\"Concluído\");\n  });\n}",
+      "body": {
+        "contentType": "application/json",
+        "body": "{\n  \"nome\": \"Arthur Editado\",\n  \"servico\": \"Corte de cabelo\",\n  \"data\": \"2026-05-03\",\n  \"horario\": \"19:00\",\n  \"status\": \"Concluído\"\n}"
+      },
+      "requestVariables": [],
+      "responses": {},
+      "description": "Teste de edição de agendamento."
+    },
+    {
+      "v": "17",
+      "endpoint": "http://localhost:8000/clientes/1",
+      "name": "Excluir Agendamento",
+      "params": [],
+      "headers": [],
+      "method": "DELETE",
+      "auth": {
+        "authType": "inherit",
+        "authActive": true
+      },
+      "preRequestScript": "",
+      "testScript": "pw.test(\"Status Code é 200 ou 404\", () => {\n  pw.expect([200, 404]).toContain(pw.response.status);\n});",
+      "body": {
+        "contentType": null,
+        "body": null
+      },
+      "requestVariables": [],
+      "responses": {},
+      "description": "Teste de exclusão de agendamento."
+    }
+  ],
+  "headers": [],
+  "auth": {
+    "authType": "none",
+    "authActive": true
+  },
+  "variables": [],
+  "description": "Collection de testes de API do projeto Barbearia System usando Hoppscotch.",
+  "preRequestScript": "",
+  "testScript": ""
+}
